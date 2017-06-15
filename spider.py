@@ -48,16 +48,22 @@ def getData(html):
     newsLists = body.find('div', class_='newsList')
     newsUl = newsLists.findAll('ul')
     content = []
-    counter = 0
     for new in newsUl:
         newTime = new.li.h4.get_text()
         newTitle = new.li.a.get_text()
         link = new.li.a
         newUrl = link['href']
-        temp = [newTime[1:],newTitle[1:],newUrl[1:]]
+        temp = [newTime,newTitle,newUrl]
         content.append(temp)
-        counter+=1
-    return content
+    #return content
+    upDownPage = body.find('div',class_='m_page').findAll('span')
+    if len(upDownPage) == 1:
+        return content
+    else:
+        downPage = upDownPage[1].a['href']
+        text = getHtml(downPage)
+        return(getData(text))
 text = getHtml('http://news.ifeng.com/listpage/11502/20170615/2/rtlist.shtml')    
 content = getData(text)
-print content,
+total = []
+total.append(content)
